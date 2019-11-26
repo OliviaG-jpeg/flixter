@@ -3,7 +3,7 @@ class Instructor::SectionsController < ApplicationController
   before_action :require_authorized_for_current_course, only: [:create]
   before_action :require_authorized_for_current_section, only: [:update]
   skip_before_action :verify_authenticity_token
-  
+
   def create
     @section = current_course.sections.create(section_params)
     redirect_to instructor_course_path(current_course)
@@ -28,6 +28,11 @@ class Instructor::SectionsController < ApplicationController
     end
   end
 
+  helper_method :current_section
+  def current_section
+    @current_section ||= Section.find(params[:id])
+  end
+
   helper_method :current_course
   def current_course
     if params[:course_id]
@@ -38,6 +43,6 @@ class Instructor::SectionsController < ApplicationController
   end
 
   def section_params
-    params.require(:section).permit(:title, :row_order_postition)
+    params.require(:section).permit(:title, :row_order_position)
   end
 end
